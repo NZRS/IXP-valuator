@@ -5,6 +5,7 @@
 1. Local eye-balls to local content in a country
 2. From members/non-members of an IXP to content in a country
 3. To show value of the creation of an IXP (perhaps time-based)
+4. From Local probes to country's content (to detect if reaching that content stays in the country)
 
 ## Methodology
 
