@@ -83,13 +83,19 @@ elif args.detection == 'country':
 trace_hops = defaultdict(list)
 trace_rtt = defaultdict(list)
 trace_mesh = pd.DataFrame({'src': [], 'dst': [], 'tag': [], 'hop': [],
-                           'rtt': []})
+                           'rtt': [], 'af': []})
 # Iterate over a list of traceroute results from RIPE
 for trace_res in trace_set:
     trace_obj = TracerouteResult(trace_res)
+    if trace_obj.af != 4:
+        continue
     trace_tag = tagger.tag(trace_obj)
     trace_hop_c = tagger.extract_hop_count(trace_obj)
     trace_hop_rtt = tagger.extract_max_rtt(trace_obj)
+
+    # An RTT of 0 is an error
+    if trace_hop_rtt == 0:
+        continue
 
     # Accumulate some results for later analysis
     trace_hops[trace_tag].append(trace_hop_c)
@@ -101,6 +107,7 @@ for trace_res in trace_set:
                                           'dst': [trace_obj.destination_name],
                                           'tag': [trace_tag],
                                           'hop': [trace_hop_c],
+                                          'af': [trace_obj.af],
                                           'rtt': [trace_hop_rtt]})])
 
 # Sort the dataframe to generate something useful
@@ -112,8 +119,11 @@ for tag in trace_mesh['tag'].unique():
     for dst in dst_list:
         row = []
         for src in src_list:
-            for v in trace_mesh.query("(src=='%s') & (dst=='%s')" % (src, dst))['rtt']:
-                row.append(v)
+            rtt_set = trace_mesh.query("(src=='%s') & (dst=='%s')" % (src, dst))['rtt']
+            if len(rtt_set) > 1:
+                row = row + [np.mean(rtt_set)]
+            else:
+                row = row + [r for r in rtt_set]
         rtt_values.append(row)
     mesh[tag] = {'x': src_list, 'y': dst_list, 'z': rtt_values}
 
@@ -126,4 +136,6 @@ with open(args.save_file, 'wb') as f:
                'rtt_delta': cdf_diff(trace_rtt, 'rtt',
                                      tagger.get_labels())}, f)
 
-trace_mesh.sort_values(by=['tag', 'src']).to_csv('trace-info.csv', index=False)
+cols = ['src', 'tag', 'dst', 'hop', 'rtt', 'af']
+trace_mesh.sort_values(by=['tag', 'src'])[cols].to_csv('trace-info.csv',
+                                                       index=False)

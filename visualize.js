@@ -115,6 +115,11 @@ $.getJSON(datafile, function(data, status) {
                          [1.0, 'rgb(177,0,38)']]
         });
     });
-    console.log(histo_data);
-    Plotly.newPlot('rtt_histogram', histo_data)
+    var layout = {
+        title: "RTT Heat Map",
+        xaxis: { title: "Probe" },
+        yaxis: { title: "Destination" },
+        margin: { l: 180, t:50 }
+    };
+    Plotly.newPlot('rtt_histogram', histo_data, layout)
 });
