@@ -1,17 +1,17 @@
 from AtlasTracerouteTagger import AtlasTracerouteTagger
 from ripe.atlas.sagan import TracerouteResult
-import radix
+import geoip2.database
+import ipaddr
 
 
-class IxpCrossTagger(AtlasTracerouteTagger):
-    ixp_networks = []
-    radix_t = None
+class CountryTagger(AtlasTracerouteTagger):
+    gh = None
+    country = None
 
-    def __init__(self, ixp_networks=None):
-        self.labels = ['IXP', 'no-IXP']
-        self.radix_t = radix.Radix()
-        for network in ixp_networks:
-            self.radix_t.add(network=network)
+    def __init__(self, geo_data=None, country=None):
+        self.labels = ['InCountry', 'OutCountry']
+        self.gh = geoip2.database.Reader(geo_data)
+        self.country = country
 
     def tag(self, tr_r):
         # Validate the object received is of the right type
@@ -27,22 +27,22 @@ class IxpCrossTagger(AtlasTracerouteTagger):
                     addr_in_hop.add(packet.origin)
 
             for addr in addr_in_hop:
-                # Lookup with address in the Radix Table of known IXPs
-                # TODO: Figure it out the right mask depending on the address
-                #  family
-                entry = self.radix_t.search_best(network=addr)
-                # If found, return the tag we have
-                if entry is not None:
-                    return 'IXP'
+                # Check if it's an private IP address
+                if ipaddr.IPAddress(addr).is_private:
+                    continue
+                # Geolocate this address
+                response = self.gh.country(addr)
+                if response.country.iso_code != self.country:
+                    return 'OutCountry'
 
         # If we reach this point, none of the addresses matched a known IXP
-        return 'no-IXP'
+        return 'InCountry'
 
     def name_probe(self, tag, probe_id):
-        if tag == 'IXP':
-            return "X%d" % probe_id
+        if tag == 'InCountry':
+            return "I%d" % probe_id
         else:
-            return "_%d" % probe_id
+            return "O%d" % probe_id
 
     def extract_hop_count(self, tr_r):
         return tr_r.total_hops

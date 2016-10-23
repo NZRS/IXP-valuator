@@ -3,6 +3,8 @@ import IxpCrossTagger
 from collections import defaultdict
 import argparse
 from ripe.atlas.sagan import TracerouteResult
+import pandas as pd
+import numpy as np
 
 parser = argparse.ArgumentParser("Detects if traceroute results traverse an "
                                  "IXP")

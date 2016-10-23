@@ -87,8 +87,34 @@ $.getJSON(datafile, function(data, status) {
     });
     var layout = {
         title: "RTT CDF",
-        xaxis: {title: "RTT (ms)"},
+        xaxis: {
+            title: "RTT (ms)",
+            domain: [0, 200]},
         yaxis: {title: "Cumulative of traces"}
     };
     Plotly.newPlot('rtt_cdf', rtt_cdf_data, layout)
+
+    // RTT Heat map
+    histo_data = [];
+    $.each(data['mesh'], function(entry, i) {
+        histo_data.push({
+            x: i['x'],
+            y: i['y'],
+            z: i['z'],
+            legendgroup: entry,
+            name: entry,
+            type: 'heatmap',
+            zmin: 0,
+            zmax: 150,
+            colorscale: [[0, 'rgb(255,255,178)'],
+                         [0.067, 'rgb(254,217,118)'],
+                         [0.13, 'rgb(254,178,76)'],
+                         [0.2, 'rgb(253,141,60)'],
+                         [0.4, 'rgb(252,78,42)'],
+                         [0.7, 'rgb(227,26,28)'],
+                         [1.0, 'rgb(177,0,38)']]
+        });
+    });
+    console.log(histo_data);
+    Plotly.newPlot('rtt_histogram', histo_data)
 });

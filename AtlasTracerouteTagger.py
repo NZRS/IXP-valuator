@@ -6,9 +6,9 @@ class AtlasTracerouteTagger:
     radix_t = None
 
     def __init__(self):
-        self.labels = [None]
+        pass
 
-    def labels(self):
+    def get_labels(self):
         return self.labels
 
     def tag(self, tr_obj):

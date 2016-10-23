@@ -8,6 +8,7 @@ class IxpCustomerTagger(AtlasTracerouteTagger):
 
     def __init__(self, cust_networks=None):
         self.radix_t = radix.Radix()
+        self.labels = ['IXP-customer', 'non-IXP-customer']
         for network in cust_networks:
             self.radix_t.add(network=network)
 
@@ -23,6 +24,12 @@ class IxpCustomerTagger(AtlasTracerouteTagger):
             return 'IXP-customer'
         else:
             return 'non-IXP-customer'
+
+    def name_probe(self, tag, probe_id):
+        if tag == 'IXP-customer':
+            return "C%d" % probe_id
+        else:
+            return "NC%d" % probe_id
 
     def extract_hop_count(self, tr_r):
         return tr_r.total_hops
