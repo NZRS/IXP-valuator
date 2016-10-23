@@ -27,7 +27,7 @@ python2 -m SimpleHTTPServer 3333
 The following cases are included
 
 1. [Namex IXP Customer Analysis](http://localhost:3333/visualize.html?namex-aggregated.json)
-2. Argentina's Local Content
+2. [Argentina's Local Content](http://localhost:3333/visualize.html?argentina-content-aggregated.json)
 3. Italy's Local Content
 4. Cabase IXP Customer Analysis
 5. Senegal's In/Out Country Analysis
