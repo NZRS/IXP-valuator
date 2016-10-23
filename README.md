@@ -28,9 +28,11 @@ The following cases are included
 
 1. [Namex IXP Customer Analysis](http://localhost:3333/visualize.html?namex-aggregated.json)
 2. [Argentina's Local Content](http://localhost:3333/visualize.html?argentina-content-aggregated.json)
-3. Italy's Local Content
-4. Cabase IXP Customer Analysis
-5. Senegal's In/Out Country Analysis
-6. Sweden's Local Content
-7. Kenya's Local Content
+3. [Italy's Local Content](http://localhost:3333/visualize.html?italy-content-aggregated.json)
+4. [Cabase IXP Customer Analysis](http://localhost:3333/visualize.html?cabase-ixp-aggregated.json)
+5. [Senegal's In/Out Country Analysis](http://localhost:3333/visualize.html?senegal-content-aggregated.json)
+6. [Sweden's Local Content](http://localhost:3333/visualize.html?sweden-content-aggregated.json)
+7. [Kenya's Local Content](http://localhost:3333/visualize.html?kenya-content-aggregated.json)
+8. [Gambia's Local Content](http://localhost:3333/visualize.html?gambia-content-aggregated.json)
+9. [Mauritania's Local Content](http://localhost:3333/visualize.html?mauritania-content-aggregated.json)
 
