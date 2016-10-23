@@ -15,4 +15,22 @@
 4. Extract meaningful metric from traceroutes
 5. Visualize aggregate results in some way
 
+## Examples
+
+Fire up a local HTTP server (you can use Python) and load the
+visualization code:
+
+```
+python2 -m SimpleHTTPServer 3333
+```
+
+The following cases are included
+
+1. (http://localhost:3333/visualize.html?namex-aggregated.json)[Namex IXP Customer Analysis]
+2. Argentina's Local Content
+3. Italy's Local Content
+4. Cabase IXP Customer Analysis
+5. Senegal's In/Out Country Analysis
+6. Sweden's Local Content
+7. Kenya's Local Content
 
