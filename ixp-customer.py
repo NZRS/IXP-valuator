@@ -111,23 +111,21 @@ for trace_res in trace_set:
                                           'rtt': [trace_hop_rtt]})])
 
 # Sort the dataframe to generate something useful
-mesh = {}
-for tag in trace_mesh['tag'].unique():
-    rtt_values = []
-    src_list = trace_mesh.sort_values(by=['tag', 'src'])['src'].unique().tolist()
-    dst_list = trace_mesh['dst'].unique().tolist()
-    for dst in dst_list:
-        row = []
-        for src in src_list:
-            rtt_set = trace_mesh.query("(src=='%s') & (dst=='%s')" % (src, dst))['rtt']
-            if len(rtt_set) > 1:
-                row = row + [np.mean(rtt_set)]
-            elif len(rtt_set) == 0:
-                row = row + [None]
-            else:
-                row = row + [r for r in rtt_set]
-        rtt_values.append(row)
-    mesh[tag] = {'x': src_list, 'y': dst_list, 'z': rtt_values}
+rtt_values = []
+src_list = trace_mesh.sort_values(by=['tag', 'src'])['src'].unique().tolist()
+dst_list = trace_mesh['dst'].unique().tolist()
+for dst in dst_list:
+    row = []
+    for src in src_list:
+        rtt_set = trace_mesh.query("(src=='%s') & (dst=='%s')" % (src, dst))['rtt']
+        if len(rtt_set) > 1:
+            row = row + [np.mean(rtt_set)]
+        elif len(rtt_set) == 0:
+            row = row + [None]
+        else:
+            row = row + [r for r in rtt_set]
+    rtt_values.append(row)
+mesh = {'x': src_list, 'y': dst_list, 'z': rtt_values}
 
 with open(args.save_file, 'wb') as f:
     json.dump({'hops': decouple(trace_hops),

@@ -1,7 +1,7 @@
-MSM_ID_FILE=argentina-msm-id-v2.txt
-MSM_DATA_FILE=argentina-content-measurements.json
-OUT_DATA_FILE=argentina-content-aggregated.json
-COUNTRY=AR
+MSM_ID_FILE=argentina-msm-id.txt
+MSM_DATA_FILE=cabase-ixp-measurements.json
+OUT_DATA_FILE=cabase-ixp-aggregated.json
+NETWORK_FILE=cabase-networks.json
 
 all: ${OUT_DATA_FILE}
 
@@ -10,8 +10,7 @@ ${MSM_DATA_FILE}: ${MSM_ID_FILE}
 
 ${OUT_DATA_FILE}: ${MSM_DATA_FILE} ixp-customer.py
 	python2 ixp-customer.py --msm-file ${MSM_DATA_FILE} \
-		--network-file GeoLite2-Country.mmdb \
-		--detection country \
-		--country ${COUNTRY} \
+		--network-file ${NETWORK_FILE} \
+		--detection customer \
 		--save-file ${OUT_DATA_FILE}
 

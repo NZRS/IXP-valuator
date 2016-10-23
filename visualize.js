@@ -95,14 +95,10 @@ $.getJSON(datafile, function(data, status) {
     Plotly.newPlot('rtt_cdf', rtt_cdf_data, layout)
 
     // RTT Heat map
-    histo_data = [];
-    $.each(data['mesh'], function(entry, i) {
-        histo_data.push({
-            x: i['x'],
-            y: i['y'],
-            z: i['z'],
-            legendgroup: entry,
-            name: entry,
+    histo_data = [{
+            x: data['mesh']['x'],
+            y: data['mesh']['y'],
+            z: data['mesh']['z'],
             type: 'heatmap',
             zmin: 0,
             zmax: 150,
@@ -113,8 +109,7 @@ $.getJSON(datafile, function(data, status) {
                          [0.4, 'rgb(252,78,42)'],
                          [0.7, 'rgb(227,26,28)'],
                          [1.0, 'rgb(177,0,38)']]
-        });
-    });
+    }];
     var layout = {
         title: "RTT Heat Map",
         xaxis: { title: "Probe" },
