@@ -122,6 +122,8 @@ for tag in trace_mesh['tag'].unique():
             rtt_set = trace_mesh.query("(src=='%s') & (dst=='%s')" % (src, dst))['rtt']
             if len(rtt_set) > 1:
                 row = row + [np.mean(rtt_set)]
+            elif len(rtt_set) == 0:
+                row = row + [None]
             else:
                 row = row + [r for r in rtt_set]
         rtt_values.append(row)
@@ -132,9 +134,7 @@ with open(args.save_file, 'wb') as f:
                'rtt': decouple(trace_rtt),
                'hops_cdf': multiple_cdf(trace_hops, 'hops'),
                'rtt_cdf': multiple_cdf(trace_rtt, 'rtt'),
-               'mesh': mesh,
-               'rtt_delta': cdf_diff(trace_rtt, 'rtt',
-                                     tagger.get_labels())}, f)
+               'mesh': mesh}, f)
 
 cols = ['src', 'tag', 'dst', 'hop', 'rtt', 'af']
 trace_mesh.sort_values(by=['tag', 'src'])[cols].to_csv('trace-info.csv',

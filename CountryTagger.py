@@ -45,25 +45,29 @@ class CountryTagger(AtlasTracerouteTagger):
             return "O%d" % probe_id
 
     def extract_hop_count(self, tr_r):
-        return tr_r.total_hops
+        if tr_r.is_success:
+            return tr_r.total_hops
+        else:
+            return 0
 
     def extract_max_rtt(self, tr_r):
-        # Rather that finding the max value, we look at the last hop in the
-        # trace and use the corresponding RTT
-        for hop in reversed(tr_r.hops):
-            addr_in_hop = set()
-            rtt_sum = 0.0
-            rtt_cnt = 0
-            for packet in hop.packets:
-                if packet.origin is not None:
-                    addr_in_hop.add(packet.origin)
-                if packet.rtt is not None:
-                    rtt_sum += packet.rtt
-                    rtt_cnt += 1
+        if tr_r.is_success:
+            # Rather that finding the max value, we look at the last hop in the
+            # trace and use the corresponding RTT
+            for hop in reversed(tr_r.hops):
+                addr_in_hop = set()
+                rtt_sum = 0.0
+                rtt_cnt = 0
+                for packet in hop.packets:
+                    if packet.origin is not None:
+                        addr_in_hop.add(packet.origin)
+                    if packet.rtt is not None:
+                        rtt_sum += packet.rtt
+                        rtt_cnt += 1
 
-            if len(addr_in_hop) > 0:
-                # This one is good to use
-                rtt_avg = rtt_sum / rtt_cnt
-                return rtt_avg
+                if len(addr_in_hop) > 0:
+                    # This one is good to use
+                    rtt_avg = rtt_sum / rtt_cnt
+                    return rtt_avg
 
         return 0
